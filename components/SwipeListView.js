@@ -71,8 +71,14 @@ class SwipeListView extends Component {
 	}
 
 	onRowOpen(key, toValue) {
-		if (this.openCellKey && this.openCellKey !== key) {
+		if(this.props.useFlatList){
+		    if (this.openCellKey !== key) {
 			this.safeCloseOpenRow();
+		    }
+		}else{
+		    if (this.openCellKey && this.openCellKey !== key) {
+			this.safeCloseOpenRow();
+		    }
 		}
 		this.openCellKey = key;
 		this.props.onRowOpen && this.props.onRowOpen(key, this._rows, toValue);
@@ -91,11 +97,20 @@ class SwipeListView extends Component {
 		if (Platform.OS === 'ios') {
 			this.yScrollOffset = e.nativeEvent.contentOffset.y;
 		}
-		if (this.openCellKey) {
+		if(this.props.useFlatList){
+		    if (this.openCellKey === 0 || this.openCellKey) {
 			if (this.props.closeOnScroll) {
-				this.safeCloseOpenRow();
-				this.openCellKey = null;
+			    this.safeCloseOpenRow();
+			    this.openCellKey = null;
 			}
+		    }
+		}else{
+		    if (this.openCellKey) {
+			if (this.props.closeOnScroll) {
+			    this.safeCloseOpenRow();
+			    this.openCellKey = null;
+			}
+		    }
 		}
 		this.props.onScroll && this.props.onScroll(e);
 	}
